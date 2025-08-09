@@ -91,6 +91,7 @@ print("Slots to pull:", table.concat(plan.slots, ","))
 
 local toCraft = peripheral.wrap("front")
 local buffer = peripheral.wrap("bottom")
+local slot = turtle.getSelectedSlot()
 
 if toCraft and buffer then
     for _, slot in ipairs(plan.slots) do
@@ -99,5 +100,12 @@ if toCraft and buffer then
         -- This assumes an input chest in front
         buffer.pullItems(peripheral.getName(toCraft), slot)
         turtle.suckDown(1)
+        turtle.select(slot + 1)
+        if turtle.getSelectedSlot() > 2 then
+            shell.run("craft", "all")
+            turtle.select(1)
+        end
     end
+    turtle.select(1)
+    turtle.dropUp()
 end
