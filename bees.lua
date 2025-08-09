@@ -97,7 +97,7 @@ while true do
         if toCraft and buffer then
             for _, slot in ipairs(plan.slots) do
                 print("Pulling from slot", slot)
-                buffer.pullItems(peripheral.getName(toCraft), slot)
+                buffer.pullItems(peripheral.getName(toCraft), slot, 1)
                 turtle.suckDown(1)
                 turtle.select(turtle.getSelectedSlot() + 1)
 
