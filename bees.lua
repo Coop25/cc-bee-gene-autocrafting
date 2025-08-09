@@ -81,7 +81,7 @@ local function planGeneSlots(brName, target, maxOver)
 end
 
 
-local plan, err = planGeneSlots("block_reader_0", 100, 5)
+local plan, err = planGeneSlots("block_reader_1", 100, 5)
 if not plan then
     printError(err)
     return
