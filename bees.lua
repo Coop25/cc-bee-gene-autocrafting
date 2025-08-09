@@ -81,32 +81,40 @@ local function planGeneSlots(brName, target, maxOver)
 end
 
 
-local plan, err = planGeneSlots("block_reader_1", 100, 5)
-if not plan then
-    printError(err)
-    return
-end
-print("Total purity:", plan.total)
-print("Slots to pull:", table.concat(plan.slots, ","))
-
-local toCraft = peripheral.wrap("front")
-local buffer = peripheral.wrap("bottom")
-local turtleSlot = turtle.getSelectedSlot()
-
-if toCraft and buffer then
-    for _, slot in ipairs(plan.slots) do
-        print("Pulling from slot", slot)
-        -- pull 1 item from this slot into the turtle
-        -- This assumes an input chest in front
-        buffer.pullItems(peripheral.getName(toCraft), slot)
-        turtle.suckDown(1)
-        turtle.select(turtleSlot + 1)
-        if turtle.getSelectedSlot() > 2 then
-            shell.run("craft", "all")
-            turtle.select(2)
-            turtleSlot = turtle.getSelectedSlot()
+while true do
+    local ok, err = pcall(function()
+        local plan, err = planGeneSlots("block_reader_1", 100, 5)
+        if not plan then
+            printError(err)
+            return
         end
+        print("Total purity:", plan.total)
+        print("Slots to pull:", table.concat(plan.slots, ","))
+
+        local toCraft = peripheral.wrap("front")
+        local buffer = peripheral.wrap("bottom")
+
+        if toCraft and buffer then
+            for _, slot in ipairs(plan.slots) do
+                print("Pulling from slot", slot)
+                buffer.pullItems(peripheral.getName(toCraft), slot)
+                turtle.suckDown(1)
+                turtle.select(turtle.getSelectedSlot() + 1)
+
+                if turtle.getSelectedSlot() > 2 then
+                    shell.run("craft", "all")
+                    turtle.select(2)
+                end
+            end
+            turtle.select(3)
+            turtle.dropUp()
+            turtle.select(1)
+        end
+    end)
+
+    if not ok then
+        printError("Loop error: " .. tostring(err))
     end
-    turtle.select(1)
-    turtle.dropUp()
+
+    sleep(1) -- 1 second delay to avoid 0-tick spam
 end
