@@ -88,3 +88,16 @@ if not plan then
 end
 print("Total purity:", plan.total)
 print("Slots to pull:", table.concat(plan.slots, ","))
+
+local toCraft = peripheral.wrap("front")
+local buffer = peripheral.wrap("bottom")
+
+if toCraft and buffer then
+    for _, slot in ipairs(plan.slots) do
+        print("Pulling from slot", slot)
+        -- pull 1 item from this slot into the turtle
+        -- This assumes an input chest in front
+        buffer.pullItems(peripheral.getName(toCraft), slot)
+        turtle.suckDown(1)
+    end
+end
