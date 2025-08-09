@@ -103,7 +103,7 @@ if toCraft and buffer then
         turtle.select(slot + 1)
         if turtle.getSelectedSlot() > 2 then
             shell.run("craft", "all")
-            turtle.select(1)
+            turtle.select(2)
         end
     end
     turtle.select(1)
